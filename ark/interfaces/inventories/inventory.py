@@ -161,8 +161,8 @@ class Inventory(Ark):
 
     def is_open(self) -> bool:
         """Checks if the inventory is open."""
-        return (self.locate_button(self._INVENTORY_TAB, confidence=0.8)
-                or self.locate_button(self._CRAFTING_TAB, confidence=0.8))
+        return (self.locate_button(self._INVENTORY_TAB, confidence=0.7)
+                or self.locate_button(self._CRAFTING_TAB, confidence=0.7))
 
     def open(self, default_key: bool = True, max_duration: int = 10) -> None:
         """Opens the inventory using the 'target inventory' keybind by default.

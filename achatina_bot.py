@@ -3,7 +3,7 @@ import time
 from ark import Player, items, Dinosaur
 
 player = Player(500, 800, 100, 100)
-achatina = Dinosaur("achatina", f"C:/Users/Tomas/Desktop/Ark code/Ark-automation/ark/assets/wheels/gacha.png")
+achatina = Dinosaur("achatina", f"C:/Users/Tomas/Desktop/Ark_code/Ark_automation/ark/assets/wheels/gacha.png")
 
 time.sleep(1)
 

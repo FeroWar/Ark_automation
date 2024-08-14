@@ -297,8 +297,6 @@ class ArkWindow:
     def locate_all_in_image(
             self, template: str, image, confidence: float, grayscale: bool = False
     ):
-        image.show()
-        Image.open(template).show()
         """Finds all locations of the given image in the given template"""
         return self.filter_points(
             set(
@@ -393,10 +391,8 @@ class ArkWindow:
                 confidence=confidence,
                 grayscale=grayscale,
             )
-        except:
-            haystackImg.show()
-            needleImg.show()
-            print("didnt find the template")
+        except Exception as e:
+            print(f"An error occurred: {e}")
             box = None
         if not box:
             return None
