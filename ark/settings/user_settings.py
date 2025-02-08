@@ -70,7 +70,7 @@ class UserSettings:
             try:
                 option, value = line.rstrip().split("=")
             except ValueError:
-                print("non necessary setting")
+                pass
             setting = _KEY_MAP.get(option)
 
             if setting is not None:

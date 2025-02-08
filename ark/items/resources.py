@@ -280,3 +280,10 @@ ELEMENT = Item(
     stack_size=100,
     inventory_icon="assets/items/resources/element.png",
 )
+
+OWL_PELLET = Item(
+    name="Snow Owl Pellet",
+    search_name="pellet",
+    stack_size=1,
+    inventory_icon="assets/items/resources/element.png",
+)

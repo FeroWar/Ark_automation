@@ -14,4 +14,8 @@ class TribeLogMessage:
     
 
     def __post_init__(self) -> None:
-        self.day = f"Day {self.day[4:]}" 
+        self.day = f"Day {self.day[4:]}"
+
+    def message(self) -> str:
+        """Returns a formatted string with the day and content"""
+        return f"{self.day}: {self.content}"

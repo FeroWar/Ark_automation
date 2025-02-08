@@ -17,8 +17,13 @@ class SpawnScreen(Ark):
     center of the red X will be assumed to be the correct location.
     """
 
-    SEARCH_BAR = (306, 982)
-    SPAWN_BUTTON = (731, 978)
+    SEARCH_BAR = (425, 960)
+    SPAWN_BUTTON = (1640, 960)
+
+    SPAWN_SEARCH_BAR = (200, 970)
+
+    TOP_BED = (290, 220)
+    TOP_BED_NAME = (108, 215, 386, 15)
 
     _BEDS_REGION = (160, 70, 1050, 880)
     _BED_NAME_AREA = (624, 967, 250, 25)
@@ -30,11 +35,28 @@ class SpawnScreen(Ark):
     def search(self, name: str) -> None:
         """Searches for a bed"""
         self.click_at(self.SEARCH_BAR)
-        with pyautogui.hold("ctrl"):
-            pyautogui.press("a")
 
         pyautogui.typewrite(name.lower(), interval=0.001)
-        self.sleep(0.3)
+        self.sleep(0.1)
+
+        top_name = self.window.locate_all_text(region=self.TOP_BED_NAME, recolour=True)
+        if name.lower() not in top_name.lower():
+            raise BedNotFoundError(f"Cant find bed named: '{name}'!")
+
+        self.click_at(self.TOP_BED, delay=0.1)
+
+    def spawn_search(self, name: str) -> None:
+        """Searches for a bed"""
+        self.click_at(self.SPAWN_SEARCH_BAR)
+
+        pyautogui.typewrite(name.lower(), interval=0.001)
+        self.sleep(0.1)
+
+        top_name = self.window.locate_all_text(region=self.TOP_BED_NAME, recolour=True)
+        if name.lower() not in top_name.lower():
+            raise BedNotFoundError(f"Cant find bed named: '{name}'!")
+
+        self.click_at(self.TOP_BED, delay=0.1)
 
     def open(self) -> None:
         """Opens the bed menu. Times out after 30 unsuccessful
@@ -45,7 +67,7 @@ class SpawnScreen(Ark):
             self.press(self.keybinds.use)
             self.sleep(1)
 
-            if attempt > 30:
+            if attempt > 3:
                 raise BedNotAccessibleError("Failed to access the bed!")
 
     def travel_to(self, bed_name: str) -> None:
@@ -59,35 +81,28 @@ class SpawnScreen(Ark):
         """
         self.open()
         self.search(bed_name)
-
-        position = self._find_bed() or self._find_x()
-        if position is None:
-            raise BedNotFoundError(f"Could not find '{bed_name}'!")
-
-        self.click_at(position, delay=0.5)
-        self.sleep(0.5)
-
-        attempts = 0
-        while not self._bed_is_selected():
-            self.click_at(position, delay=0.5)
-            if await_event(self._bed_is_selected, max_duration=1):
-                break
-
-            attempts += 1
-            if attempts >= 2:
-                raise BedNotFoundError(f"Could not select '{bed_name}'!")
-
-            self.search(bed_name)
-            position = self._find_bed() or self._find_x()
-
-        if self._spawn_region_is_selected():
-            raise BedNotFoundError(
-                f"Could not find '{bed_name}'! Random spawn region was selected!"
-            )
-
         self.spawn()
-        if await_event(self._is_travelling, max_duration=15 * config.TIMER_FACTOR):
-            self.sleep(2)
+
+        if await_event(self._is_travelling, max_duration=5 * config.TIMER_FACTOR):
+            self.sleep(0.5)
+            return
+        raise PlayerDidntTravelError(f"Failed to travel to bed '{bed_name}'!")
+
+    def spawn_in(self, bed_name: str) -> None:
+        """Travels to a bed given it's name. If the spawn screen is not
+        already open, it will be opened first.
+
+        Parameters
+        ----------
+        name :class:`str`:
+            The name of the bed to travel to
+        """
+        if self.is_open():
+            self.spawn_search(bed_name)
+            self.spawn()
+
+        if await_event(self._is_travelling, max_duration=5 * config.TIMER_FACTOR):
+            self.sleep(0.5)
             return
         raise PlayerDidntTravelError(f"Failed to travel to bed '{bed_name}'!")
 
@@ -108,7 +123,13 @@ class SpawnScreen(Ark):
         return (
             self.window.locate_template(
                 f"{self.PKG_DIR}/assets/interfaces//bed_filter.png",
-                region=(140, 950, 150, 50),
+                region=(294, 134, 71, 36),
+                confidence=0.8,
+            )
+            is not None
+            or self.window.locate_template(
+                f"{self.PKG_DIR}/assets/interfaces//bed_filter.png",
+                region=(380, 134, 71, 36),
                 confidence=0.8,
             )
             is not None

@@ -34,9 +34,9 @@ class Player(Ark):
         The players hotbar slots
     """
 
-    _DEBUFF_REGION = (1270, 950, 610, 130)
+    _DEBUFF_REGION = (1270, 950, 610,     130)
     _ADDED_REGION = (0, 450, 314, 240)
-    _HP_BAR = (1882, 1022, 15, 50)
+    _HP_BAR = (1870, 965, 30, 20)
     _HAS_DIED = (630, 10, 590, 80)
     _STAM_BAR = (1850, 955, 70, 65)
 
@@ -49,7 +49,7 @@ class Player(Ark):
         ...
 
     def __init__(
-        self, health=None, food=None, water=None, weight=None, *, stats=None
+            self, health=None, food=None, water=None, weight=None, *, stats=None
     ) -> None:
         super().__init__()
         self.inventory = PlayerInventory()
@@ -75,23 +75,23 @@ class Player(Ark):
         self._fov_factor = 1.43 / self.settings.fov_multiplier
 
     def turn_90_degrees(
-        self, direction: Literal["right", "left"] = "right", delay: int | float = 0
+            self, direction: Literal["right", "left"] = "right", delay: int | float = 0
     ) -> None:
         """Turns by 90 degrees in given direction"""
-        val = 129 if direction == "right" else -129
+        val = 90 if direction == "right" else -90
         self.turn_x_by(val)
         self.sleep(delay)
 
     def look_down_hard(self) -> None:
         """Looks down all the way to the ground"""
         for _ in range(7):
-            self.turn_y_by(50, delay=0.05)
+            self.turn_y_by(-50, delay=0.05)
         self.sleep(0.3)
 
     def look_up_hard(self) -> None:
         """Looks up all the way to the ceiling"""
         for _ in range(7):
-            self.turn_y_by(-50, delay=0.05)
+            self.turn_y_by(50, delay=0.05)
         self.sleep(0.3)
 
     def turn_y_by(self, amount: int, delay: int | float = 0.1) -> None:
@@ -209,22 +209,22 @@ class Player(Ark):
         with the `received_item` method of the `Inventory` class, which does
         the same but on a different position."""
         return (
-            self.window.locate_template(
-                f"{self.PKG_DIR}/assets/templates/added.png",
-                region=self._ADDED_REGION,
-                confidence=0.75,
-            )
-            is not None
+                self.window.locate_template(
+                    f"{self.PKG_DIR}/assets/templates/added.png",
+                    region=self._ADDED_REGION,
+                    confidence=0.75,
+                )
+                is not None
         )
 
     def has_died(self) -> bool:
         return (
-            self.window.locate_template(
-                f"{self.PKG_DIR}/assets/templates/you_died.png",
-                region=self._HAS_DIED,
-                confidence=0.7,
-            )
-            is not None
+                self.window.locate_template(
+                    f"{self.PKG_DIR}/assets/templates/you_died.png",
+                    region=self._HAS_DIED,
+                    confidence=0.7,
+                )
+                is not None
         )
 
     def is_spawned(self) -> bool:
@@ -234,10 +234,10 @@ class Player(Ark):
     def has_buff(self, buff: Buff) -> bool:
         """Checks if the player has the given buff"""
         return (
-            self.window.locate_template(
-                buff.image, region=self._DEBUFF_REGION, confidence=0.8
-            )
-            is not None
+                self.window.locate_template(
+                    buff.image, region=self._DEBUFF_REGION, confidence=0.8
+                )
+                is not None
         )
 
     def needs_recovery(self) -> bool:
@@ -328,3 +328,28 @@ class Player(Ark):
         while bag.inventory.is_open():
             self.press("o")
             self.sleep(0.3)
+
+    def get_hp(self, max_attempts: int = 3) -> None:
+        hp = ""
+        attempts = 0
+
+        while hp == "" and attempts < max_attempts:
+            attempts += 1
+            self.press(self.keybinds.hud_info)
+
+            hp = self.window.locate_all_text(region=self._HP_BAR, recolour=False, ocr_config=r'--psm 6 -c tessedit_char_whitelist=0123456789' )
+            print(hp)
+        if hp != "":
+            self.stats.health = int(hp)
+
+    def interact(self):
+        self.press(self.keybinds.use)
+
+    def suicide(self):
+        self.inventory.open()
+        self.inventory.select_slot(0)
+        self.inventory.select_slot(1)
+        self.inventory.select_slot(0)
+        time.sleep(6)
+        self.press(self.keybinds.use)
+        time.sleep(6)

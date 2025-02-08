@@ -67,9 +67,10 @@ class TribeLog(Ark):
         extracts the message and checks for contents. Adds new messages to the tribelog
         and posts them as alert if they are relevant.
         """
-        logs = self.window.locate_all_text(region=self.LOG_REGION).split('Day')
+        logs = self.window.locate_all_text(region=self.LOG_REGION, recolour=True).split('Day')
 
-        messages = list[TribeLogMessage] = []
+        print(logs)
+        messages = list[TribeLogMessage]()
         for log in logs:
             log = 'Day' + log
             msg = log.split(': ')
@@ -79,7 +80,7 @@ class TribeLog(Ark):
                     if msgLog.day == msg[0]:
                         is_new = False
                 if is_new:
-                    messages += TribeLogMessage(msg[0], "", msg[1])
+                    messages.append(TribeLogMessage(msg[0], "", msg[1]))
         post = len(self._tribe_log) != 0
         self._tribe_log += messages
         self.delete_old_logs()
@@ -121,7 +122,7 @@ class TribeLog(Ark):
             if self.await_open():
                 break
             c += 1
-            if c > 20:
+            if c > 10:
                 raise LogsNotOpenedError("Failed to open logs!")
 
         # litle buffer in case timer pops or server lags

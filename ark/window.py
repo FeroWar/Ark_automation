@@ -10,6 +10,9 @@ from mss import mss, screenshot, tools  # type: ignore[import]
 from PIL import Image, ImageOps
 from pytesseract import pytesseract as tes  # type: ignore[import]
 from screeninfo import get_monitors  # type: ignore[import]
+import os
+import cv2
+from skimage.metrics import structural_similarity as ssim
 
 from ._helpers import get_center
 from . import config
@@ -44,7 +47,7 @@ class ArkWindow:
         self._boundaries = self.get_boundaries()
         self._monitor = self.get_monitor()
         self._fullscreen = self.check_fullscreen()
-        tes.tesseract_cmd = config.TESSERACT_PATH
+        tes.tesseract_cmd = os.path.join(os.getcwd(), 'Tesseract-OCR', 'tesseract.exe')
 
     def __str__(self) -> str:
         return (
@@ -139,6 +142,8 @@ class ArkWindow:
         """
         try:
             windows = pygetwindow.getWindowsWithTitle("ArkAscended")
+            if not windows:
+                windows = pygetwindow.getWindowsWithTitle("ARK: Survival Ascended in GeForce NOW")
             self._handle: pygetwindow.Win32Window = windows[0]
             return {
                 "left": self._handle.left + self._CORRECT_X if self._handle.left else 0,
@@ -381,10 +386,15 @@ class ArkWindow:
         if self.monitor["width"] > 1920 or self.monitor["height"] > 1080:
             needleImg = Image.open(template)
             haystackImg = self.convert_image_down(img, (needleImg.size[0] + 1, needleImg.size[1] + 1))
-        else:
+        elif self.monitor["width"] < 1920 or self.monitor["height"] < 1080:
             haystackImg = img
             needleImg = self.convert_image_down(Image.open(template), haystackImg.size) if convert else template
+        else:
+            needleImg = Image.open(template)
+            haystackImg = img
         try:
+            #needleImg.save("needleImg.png")
+            #haystackImg.save("haystackImg.png")
             box = pg.locate(
                 needleImage=needleImg,
                 haystackImage=haystackImg,
@@ -393,6 +403,9 @@ class ArkWindow:
             )
         except Exception as e:
             print(f"An error occurred: {e}")
+            print("needle Image: " + str(needleImg.size))
+            print("haystack Image: " + str(haystackImg.size))
+            print(template)
             box = None
         if not box:
             return None
@@ -415,11 +428,13 @@ class ArkWindow:
         image_rgb = cv.cvtColor(haystack, cv.COLOR_BGR2RGB)
         img = Image.fromarray(image_rgb)
         if self.monitor["width"] > 1920 or self.monitor["height"] > 1080:
+            print("resize")
             needleImg = Image.open(template)
             haystackImg = self.convert_image_down(img, (needleImg.size[0] + 1, needleImg.size[1] + 1))
         else:
+            print("no resize")
             haystackImg = img
-            needleImg = self.convert_image_down(Image.open(template), haystackImg.size) if convert else template
+            needleImg = self.convert_image_down(Image.open(template), haystackImg.size) if convert else Image.open(template)
         return self.filter_points(
             set(
                 pg.locateAll(
@@ -433,27 +448,27 @@ class ArkWindow:
         )
 
     def locate_all_text(
-            self, region: tuple[int, int, int, int], convert: bool = True, recolour: bool = True):
+            self, region: tuple[int, int, int, int], convert: bool = True, recolour: bool = False, grayscale: bool = True, ocr_config: str = "--oem 3 --psm 6 -l eng"):
         if convert:
             region = self.convert_region(region)
 
         haystack: np.ndarray = np.asarray(self.grab_screen(region, convert=False))  # type: ignore[arg-type]
         image_rgb = cv.cvtColor(haystack, cv.COLOR_BGR2RGB)
         img = Image.fromarray(image_rgb)
-
         if recolour:
             for x in range(img.width):
                 for y in range(img.height):
                     r, g, b = img.getpixel((x, y))
-                    if (r > 100 and b > 150 and g < 100):
+                    if (r > 100 and g < 100 and b > 150):
                         img.putpixel((x, y), (0, 255, 255))
                     if (r > 100 and g < 80 and b < 80):
                         img.putpixel((x, y), (0, 255, 255))
-                    if (r > 130 and g > 130 and b > 130):
+                    if (g > 130 and b > 130):
                         img.putpixel((x, y), (0, 255, 255))
+        if grayscale:
             img = img.convert('L')
 
-        text = tes.image_to_string(img)
+        text = tes.image_to_string(img, config=ocr_config)
 
         return text
 
@@ -537,3 +552,47 @@ class ArkWindow:
         # Taking a matrix of size 5 as the kernel
         kernel = np.ones((matrix_size, matrix_size), np.uint8)
         return cv.dilate(np.asarray(img), kernel, iterations=1)
+
+    def compare_imgs(self, img1, img2, threshold=0.8):
+        """
+        Compares two images to determine if they are at least 80% similar.
+
+        :param img1: First image as a NumPy array.
+        :param img2: Second image as a NumPy array.
+        :param threshold: Similarity threshold (default is 0.8 or 80%).
+        :return: True if images are at least threshold similar, False otherwise.
+        """
+
+        img1 = np.array(img1)
+        img2 = np.array(img2)
+
+        # Convert images to grayscale if they are not already
+        if len(img1.shape) == 3:
+            img1 = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
+        if len(img2.shape) == 3:
+            img2 = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
+
+        # Resize images to match if they have different shapes
+        if img1.shape != img2.shape:
+            img2 = cv2.resize(img2, (img1.shape[1], img1.shape[0]))
+
+        # Compute SSIM between images
+        similarity_index, _ = ssim(img1, img2, full=True)
+
+        # Return True if similarity is above the threshold
+        return similarity_index >= threshold
+
+    def get_fullscreen(self) -> Image.Image:
+        """Capture the screen within the defined boundaries and return a PIL image."""
+        boundaries_tuple = (
+        self.boundaries["left"], self.boundaries["top"], self.boundaries["width"], self.boundaries["height"])
+
+        before_scr = self.grab_screen(boundaries_tuple, convert=False)  # Ensure grab_screen exists and works
+        before_stack: np.ndarray = np.asarray(before_scr)
+
+        if before_stack is None or before_stack.size == 0:
+            raise ValueError("Screen capture failed, resulting in an empty array.")
+
+        before_rgb = cv.cvtColor(before_stack, cv.COLOR_BGR2RGB)
+
+        return Image.fromarray(before_rgb)

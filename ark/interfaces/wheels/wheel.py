@@ -77,6 +77,7 @@ class ActionWheel(Ark):
                 
             self.sleep(1)
             pyautogui.keyUp(self.keybinds.use)
+        self.sleep(0.2)
 
     def deactivate(self) -> None:
         pyautogui.keyUp(self.keybinds.use)
@@ -86,7 +87,7 @@ class ActionWheel(Ark):
         pydirectinput.moveTo(*position, duration=0.1)
         self.sleep(0.1)
         pydirectinput.moveTo(*position, duration=0.1)
-        self.sleep(1)
+        self.sleep(0.3)
         if click:
             self.click("left")
 

@@ -87,9 +87,9 @@ class Inventory(Ark):
     _FOLDER_VIEW = Button((1663, 188), (1632, 158, 61, 56), "folder_view.png")
     _SHOW_ENGRAMS = Button((1716, 189), (1690, 160, 51, 51), "show_engrams.png")
     _UNL_ENGRAMS = Button((1770, 188), (1742, 160, 56, 54), "unlearned_engrams.png")
-    _TRANSFER_ALL = Button((1373, 200))
+    _TRANSFER_ALL = Button((1435, 200))
     _DROP_ALL = Button((1425, 187))
-    _CRAFTING_TAB = Button((1716, 118), (1627, 82, 211, 69), "crafting.png")
+    _CRAFTING_TAB = Button((1700, 130), (1623, 115, 133, 41), "crafting.png")
     _INVENTORY_TAB = Button((1276, 135), (1206, 119, 144, 35), "inventory.png")
     _CREATE_FOLDER = Button((1584, 187))
     _STOP_CRAFTING = Button((1775, 800), (1750, 775, 53, 56), "cancel_craft.png")
@@ -213,7 +213,7 @@ class Inventory(Ark):
 
             if attempts > (40 * config.TIMER_FACTOR / config.INVENTORY_OPEN_INTERVAL):
                 raise InventoryNotClosableError(self)
-        self.sleep(0.3)
+        self.sleep(0.5)
 
     @overload
     def scroll(self, way: Literal["up", "down"], *, rows: int = 1) -> None:
@@ -358,12 +358,11 @@ class Inventory(Ark):
             raise InventoryNotOpenError
 
         if tab == "crafting":
-            self.click_at(self._CRAFTING_TAB.location, delay=0.3)
+            self.click_at(self._CRAFTING_TAB.location, delay=0.1)
         elif tab == "inventory":
-            self.click_at(self._INVENTORY_TAB.location, delay=0.3)
+            self.click_at(self._INVENTORY_TAB.location, delay=0.1)
         else:
             raise ValueError(f"Expected one of ['inventory', 'crafting'], got {tab}")
-        self.sleep(1)
 
     @final
     def drop(self, item: Item, search: bool = True) -> None:

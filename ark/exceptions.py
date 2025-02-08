@@ -56,6 +56,12 @@ class BedNotFoundError(InterfaceError):
     """Raised when the bed map could not be opened."""
 
 
+class TeleporterNotAccessibleError(InterfaceError):
+    """Raised when the bed map could not be opened."""
+
+
+class TeleporterNotFoundError(InterfaceError):
+    """Raised when the bed map could not be opened."""
 class InventoryError(InterfaceError):
     """Base class for all inventory exceptions"""
 

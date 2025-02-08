@@ -26,7 +26,7 @@ class PlayerInventory(Inventory):
     """
 
     SLOTS = [
-        (x, y, 93, 93) for y in range(232, 883, 93) for x in range(117, 582 + 93, 93)
+        (x, y, 87, 87) for y in range(239, 883, 93) for x in range(178, 1708 + 93, 93)
     ]
     HEAD = (750, 155, 94, 94)
     TORSO = (750, 252, 94, 94)
@@ -35,9 +35,9 @@ class PlayerInventory(Inventory):
     OFFHAND = (1076, 252, 94, 94)
     FEET = (1076, 349, 94, 94)
 
-    _CREATE_FOLDER = Button((500, 200))
-    _TRANSFER_ALL = Button((355, 200))
-    _DROP_ALL = Button((400, 200))
+    _CREATE_FOLDER = Button((560, 200))
+    _TRANSFER_ALL = Button((415, 200))
+    _DROP_ALL = Button((465, 200))
     _INVENTORY_TAB = Button((240, 135), (175, 116, 145, 40), "inventory.png")
     _CRAFTING_TAB = Button((660, 135), (600, 116, 122, 40), "crafting.png")
 

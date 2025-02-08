@@ -11,13 +11,19 @@ class Bed(Structure):
         super().__init__(name, "assets/wheels/bed.png")
         self.interface = SpawnScreen()
 
-    def spawn(self) -> None:
-        self.interface.travel_to(self.name)
-
+    def travel_to(self, name: str) -> None:
+        self.interface.travel_to(name)
 
     def lay_down(self) -> None:
         self.action_wheel.activate()
-        self.action_wheel.select_action((1130, 510), click=False)
+        self.action_wheel.select_action((1130, 510))
+        self.action_wheel.deactivate()
 
     def get_up(self) -> None:
         self.press(self.keybinds.use)
+
+    def spawn_in(self, name: str):
+        self.interface.spawn_in(name)
+
+    def access(self):
+        self.interface.open()
