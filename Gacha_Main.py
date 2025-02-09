@@ -11,20 +11,8 @@ bed = Bed("")
 
 Y = ["A", "B", "C", "D", "E"]
 G = string.ascii_uppercase
-i = 0
+i = 3
 
-player.suicide()
-while not bed.interface.is_open():
-    time.sleep(0.5)
-bed.spawn_in("SpawnA")
-time.sleep(12)
-player.turn_y_by(-30)
-bed.lay_down()
-bed.get_up()
-time.sleep(0.3)
-player.walk("s", 1)
-player.look_down_hard()
-preload_croplots()
 player.suicide()
 while not bed.interface.is_open():
     time.sleep(0.5)

@@ -1,3 +1,4 @@
+import time
 from typing import final
 
 from ..spawn_screen import SpawnScreen
@@ -18,9 +19,11 @@ class Bed(Structure):
         self.action_wheel.activate()
         self.action_wheel.select_action((1130, 510))
         self.action_wheel.deactivate()
+        time.sleep(0.3)
 
     def get_up(self) -> None:
         self.press(self.keybinds.use)
+        time.sleep(0.3)
 
     def spawn_in(self, name: str):
         self.interface.spawn_in(name)

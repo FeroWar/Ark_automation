@@ -33,7 +33,7 @@ class TeleportScreen(Ark):
         self.click_at(self.SEARCH_BAR)
 
         pyautogui.typewrite(name.lower(), interval=0.001)
-        self.sleep(0.1)
+        self.sleep(0.3)
 
         top_name = self.window.locate_all_text(region=self.TOP_TELEPORTER_NAME, recolour=True)
         print(top_name)
@@ -69,13 +69,15 @@ class TeleportScreen(Ark):
             before = self.window.get_fullscreen()
             self.open()
             self.search(tp_name)
+
             self.teleport()
-            after = self.window.get_fullscreen()
             self.sleep(0.5)
+            after = self.window.get_fullscreen()
 
             if not self.window.compare_imgs(before, after, 0.8):
                 return
-            self.sleep(0.5)
+
+            self.sleep(1)
         raise PlayerDidntTravelError(f"Failed to travel to tp '{tp_name}'!")
 
     def teleport_to_default(self) -> None:

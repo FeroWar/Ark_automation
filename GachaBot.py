@@ -13,18 +13,18 @@ dedi = TekDedicatedStorage()
 time.sleep(1)
 
 
-def y_vaccum(first: bool):
+def y_vaccum(first: bool, preload: bool):
     if first:
-        access_cropplots()
+        access_cropplots(preload)
         player.walk("d", 0.6)
-        access_cropplots()
+        access_cropplots(preload)
         player.walk("a", 0.6)
     else:
         player.walk("d", 0.6)
         player.walk("d", 0.6)
-        access_cropplots()
+        access_cropplots(preload)
         player.walk("d", 0.6)
-        access_cropplots()
+        access_cropplots(preload)
         player.walk("a", 1.9)
     player.look_down_hard()
 
@@ -48,7 +48,7 @@ def gacha_vaccum(first: bool, out: str):
         player.turn_x_by(-100)
         gacha.inventory.open()
         gacha.inventory.transfer_all(items.OWL_PELLET)
-        player.inventory.transfer_all(items.Y_TRAP, items.YTRAP_SEED)
+        player.inventory.transfer_all(items.Y_TRAP)
         player.inventory.transfer_all(items.OWL_PELLET)
         gacha.inventory.close()
         pegomastaks()
@@ -60,18 +60,37 @@ def gacha_vaccum(first: bool, out: str):
     player.look_down_hard()
 
 
-def access_cropplots():
+def preload_croplots():
+    tp.teleport("yya")
+    y_vaccum(True, True)
+    y_vaccum(False, True)
+    tp.teleport("yyb")
+    y_vaccum(True, True)
+    y_vaccum(False, True)
+    tp.teleport("yyc")
+    y_vaccum(True, True)
+    y_vaccum(False, True)
+    tp.teleport("yyd")
+    y_vaccum(True, True)
+    y_vaccum(False, True)
+    tp.teleport("yye")
+    y_vaccum(True, True)
+    y_vaccum(False, True)
+
+
+def access_cropplots(preload: bool):
     angles = [30, 10, 15, 15, 15, 15, 15, 15, 20]
     player.look_down_hard()
     for angle in angles:
         player.turn_y_by(angle)
-        take_y()
+        take_y(preload)
 
 
-def take_y():
+def take_y(preload: bool):
     crop_plot.open()
-    crop_plot.inventory.search(items.Y_TRAP)
-    crop_plot.inventory.transfer_all()
+    if not preload:
+        crop_plot.inventory.search(items.Y_TRAP)
+        crop_plot.inventory.transfer_all()
     crop_plot.close()
 
 
@@ -86,6 +105,7 @@ def pegomastaks():
     gacha.inventory.close()
     player.turn_x_by(80)
     player.look_down_hard()
+
 
 def tek_pause():
     bed.lay_down()
@@ -134,6 +154,8 @@ def drop_vaults():
     dump_vault()
     player.walk("d", 0.35)
     dump_vault()
+
+
 def open_crystals():
     player.look_down_hard()
     player.turn_y_by(50)
@@ -152,28 +174,30 @@ def open_crystals():
     drop_vaults()
     player.turn_x_by(90)
 
-def run_script(letter :str):
-    #player.suicide()
-    #while not bed.interface.is_open():
-        #time.sleep(0.5)
-    #bed.spawn_in("SpawnA")
-    #wtime.sleep(12)
+
+def run_script(letter_Y: str, letter_G: str):
     player.turn_y_by(-30)
     bed.lay_down()
     bed.get_up()
     time.sleep(0.3)
     player.walk("s", 1)
     player.look_down_hard()
-    tp.teleport("yy"+letter)
-    y_vaccum(True)
-    tp.teleport("Gacha+letter")
-    gacha_vaccum(True, "yy"+letter)
-    y_vaccum(False)
-    tp.teleport("Gacha+letter")
+    tp.teleport("yy" + letter_Y)
+    y_vaccum(True, False)
+    tp.teleport("Gacha" + letter_G)
+    gacha_vaccum(True, "yy" + letter_Y)
+    y_vaccum(False, False)
+    tp.teleport("yyw")
+    player.walk("d", 0.6)
+    player.inventory.open()
+    player.inventory.search(items.OWL_PELLET)
+    player.inventory.close()
+    player.walk("a", 0.6)
+    tp.teleport("Gacha" + letter_G)
     gacha_vaccum(False, "bed out")
     open_crystals()
     player.look_down_hard()
-    player.turn_y_by(50)
+    player.turn_y_by(55)
     tek_pause()
 
 #run_script()
