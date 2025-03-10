@@ -1,38 +1,19 @@
 import string
 import time
 
-from GachaBot import run_script, preload_croplots
-from ark import Bed, Player
+from GachaBotIsland import run_script_Square, gacha_square, y_module, open_crystals, tek_pause
+from ark import Bed, Player, Dinosaur
 from ark.interfaces.structures.teleporter import Teleporter
 
 player = Player(500, 800, 100, 100)
 tp = Teleporter("Main Base")
 bed = Bed("")
 
-Y = ["A", "B", "C", "D", "E"]
-G = string.ascii_uppercase
+G = ["AA"]
 i = 0
 
-player.suicide()
-while not bed.interface.is_open():
-    time.sleep(0.5)
-bed.spawn_in("SpawnA")
-time.sleep(12)
-player.turn_y_by(-30)
-bed.lay_down()
-bed.get_up()
-time.sleep(0.3)
-player.walk("s", 1)
-player.look_down_hard()
-preload_croplots()
-player.suicide()
-while not bed.interface.is_open():
-    time.sleep(0.5)
-bed.spawn_in("SpawnA")
-time.sleep(12)
-while True:
-    try:
-        run_script(Y[i % 5], G[i])
-    except:
-        player.suicide()
-    i += 1
+time.sleep(1)
+player.turn_x_by(180)
+gacha_square(True,"bed")
+tp.teleport_default()
+gacha_square(False,"bed")

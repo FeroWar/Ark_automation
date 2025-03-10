@@ -7,9 +7,10 @@ from .._ark import Ark
 from .._helpers import await_event, get_center
 from ..exceptions import PlayerDidntTravelError, TeleporterNotFoundError, TeleporterNotAccessibleError
 
-from .. import config
+from .. import config, Player
 from pytesseract import pytesseract as tes  # type: ignore[import]
 
+player = Player(500, 800, 100, 100)
 
 class TeleportScreen(Ark):
     """Represents the spawn screen in Ark.
@@ -66,15 +67,18 @@ class TeleportScreen(Ark):
         max_attempts = 3
 
         for attempt in range(max_attempts):
+            player.look_up_hard()
             before = self.window.get_fullscreen()
+            player.look_down_hard()
             self.open()
             self.search(tp_name)
 
             self.teleport()
             self.sleep(0.5)
+            player.look_up_hard()
             after = self.window.get_fullscreen()
-
-            if not self.window.compare_imgs(before, after, 0.8):
+            player.look_down_hard()
+            if not self.window.compare_imgs(before, after, 0.9):
                 return
 
             self.sleep(1)
@@ -87,11 +91,12 @@ class TeleportScreen(Ark):
         for attempt in range(max_attempts):
             before = self.window.get_fullscreen()
             self.press(self.keybinds.reload)
+            self.sleep(0.5)
             after = self.window.get_fullscreen()
 
             if not self.window.compare_imgs(before, after, 0.8):
                 return
-            self.sleep(0.5)
+            self.sleep(1)
         raise PlayerDidntTravelError("Failed to travel to default tp!")
 
     def is_open(self) -> bool:
