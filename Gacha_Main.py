@@ -9,7 +9,7 @@ player = Player(500, 800, 100, 100)
 tp = Teleporter("Main Base")
 bed = Bed("")
 
-G = ["AA", "BB"]
+G = ["AA", "AB","AC", "AD"]
 i = 0
 
 time.sleep(1)
@@ -23,5 +23,9 @@ while True:
         run_script_Square(G[i%len(G)])
     except:
         player.suicide()
+        while not bed.interface.is_open():
+            time.sleep(0.5)
+        bed.spawn_in("SpawnA")
+        time.sleep(12)
     i += 1
 

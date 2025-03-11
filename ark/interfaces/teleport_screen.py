@@ -36,7 +36,7 @@ class TeleportScreen(Ark):
         pyautogui.typewrite(name.lower(), interval=0.001)
         self.sleep(0.3)
 
-        top_name = self.window.locate_all_text(region=self.TOP_TELEPORTER_NAME, recolour=True)
+        top_name = self.window.locate_all_text(region=self.TOP_TELEPORTER_NAME, recolour=False)
         print(top_name)
         if name.lower() not in top_name.lower():
             raise TeleporterNotFoundError(f"Cant find tp named: '{name}'!")
