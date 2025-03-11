@@ -13,7 +13,4 @@ G = ["AA"]
 i = 0
 
 time.sleep(1)
-player.turn_x_by(180)
-gacha_square(True,"bed")
-tp.teleport_default()
-gacha_square(False,"bed")
+player.look_down_hard()
