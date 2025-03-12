@@ -8,7 +8,7 @@ player = Player(500, 800, 100, 100)
 tp = Teleporter("Main Base")
 bed = Bed("")
 crop_plot = TekCropPlot("")
-gacha = Dinosaur("Gacha", f"C:/Users\/Tomas/Desktop/Ark_code/Ark_automation/ark/assets/wheels/gacha.png")
+gacha = Dinosaur("Gacha", f"C:/Users/Tomas/Desktop/Ark_code/Ark_automation/ark/assets/wheels/gacha.png")
 dedi = TekDedicatedStorage()
 
 def run_script_Square(letter_G: str):
@@ -134,13 +134,17 @@ def gacha_take():
     gacha.inventory.close()
 
 def y_module():
+    player.turn_x_by(-180)
     player.look_down_hard()
+    player.turn_y_by(70)
+    bed.lay_down()
+    bed.get_up()
+    player.walk("s", 0.2)
     access_cropplots(True)
-    player.walk("d", 0.6)
-    access_cropplots(False)
-    player.walk("d", 0.6)
+    player.walk("a", 0.6)
     access_cropplots(False)
     player.walk("a", 0.6)
+    access_cropplots(False)
     player.walk("a", 0.6)
     player.look_down_hard()
 
