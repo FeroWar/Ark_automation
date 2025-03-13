@@ -35,28 +35,38 @@ class SpawnScreen(Ark):
     def search(self, name: str) -> None:
         """Searches for a bed"""
         self.click_at(self.SEARCH_BAR)
+        attempts = 0
 
         pyautogui.typewrite(name.lower(), interval=0.001)
         self.sleep(0.1)
-
-        top_name = self.window.locate_all_text(region=self.TOP_BED_NAME, recolour=True)
-        if name.lower() not in top_name.lower():
-            raise BedNotFoundError(f"Cant find bed named: '{name}'!")
-
-        self.click_at(self.TOP_BED, delay=0.1)
+        while attempts < 5:
+            top_name = self.window.locate_all_text(region=self.TOP_BED_NAME, recolour=False)
+            print(top_name)
+            if name.lower() in top_name.lower():
+                self.click_at(self.TOP_BED, delay=0.1)
+                self.spawn()
+                return
+            self.sleep(0.2)
+            attempts += 1
+        raise BedNotFoundError(f"Cant find bed named: '{name}'!")
 
     def spawn_search(self, name: str) -> None:
         """Searches for a bed"""
         self.click_at(self.SPAWN_SEARCH_BAR)
+        attempts = 0
 
         pyautogui.typewrite(name.lower(), interval=0.001)
         self.sleep(0.1)
-
-        top_name = self.window.locate_all_text(region=self.TOP_BED_NAME, recolour=True)
-        if name.lower() not in top_name.lower():
-            raise BedNotFoundError(f"Cant find bed named: '{name}'!")
-
-        self.click_at(self.TOP_BED, delay=0.1)
+        while attempts < 5:
+            top_name = self.window.locate_all_text(region=self.TOP_BED_NAME, recolour=False)
+            print(top_name)
+            if name.lower() in top_name.lower():
+                self.click_at(self.TOP_BED, delay=0.1)
+                self.spawn()
+                return
+            self.sleep(0.2)
+            attempts += 1
+        raise BedNotFoundError(f"Cant find bed named: '{name}'!")
 
     def open(self) -> None:
         """Opens the bed menu. Times out after 30 unsuccessful
@@ -81,7 +91,6 @@ class SpawnScreen(Ark):
         """
         self.open()
         self.search(bed_name)
-        self.spawn()
 
         if await_event(self._is_travelling, max_duration=5 * config.TIMER_FACTOR):
             self.sleep(0.5)
@@ -99,7 +108,6 @@ class SpawnScreen(Ark):
         """
         if self.is_open():
             self.spawn_search(bed_name)
-            self.spawn()
 
         if await_event(self._is_travelling, max_duration=5 * config.TIMER_FACTOR):
             self.sleep(0.5)

@@ -33,15 +33,18 @@ class TeleportScreen(Ark):
         """Searches for a bed"""
         self.click_at(self.SEARCH_BAR)
 
+        attempts = 0
         pyautogui.typewrite(name.lower(), interval=0.001)
-        self.sleep(0.3)
+        self.sleep(0.1)
+        while attempts < 5:
+            top_name = self.window.locate_all_text(region=self.TOP_TELEPORTER_NAME, recolour=False)
+            if name.lower() in top_name.lower():
+                self.click_at(self.TOP_TELEPORTER, delay=0.1)
+                return
+            self.sleep(0.2)
+            attempts += 1
 
-        top_name = self.window.locate_all_text(region=self.TOP_TELEPORTER_NAME, recolour=False)
-        print(top_name)
-        if name.lower() not in top_name.lower():
-            raise TeleporterNotFoundError(f"Cant find tp named: '{name}'!")
-
-        self.click_at(self.TOP_TELEPORTER, delay=0.1)
+        raise TeleporterNotFoundError(f"Cant find tp named: '{name}'!")
 
     def open(self) -> None:
         """Opens the bed menu. Times out after 30 unsuccessful

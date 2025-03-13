@@ -15,5 +15,4 @@ i = 0
 
 
 time.sleep(1)
-
-
+bed.travel_to("spawnb")
