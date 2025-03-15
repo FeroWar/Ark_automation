@@ -15,4 +15,6 @@ i = 0
 
 
 time.sleep(1)
-bed.travel_to("spawnb")
+player.look_down_hard()
+player.turn_y_by(30)
+player.turn_x_by(90)
