@@ -8,7 +8,7 @@ player = Player(500, 800, 100, 100)
 tp = Teleporter("Main Base")
 bed = Bed("")
 crop_plot = TekCropPlot("")
-gacha = Dinosaur("Gacha", f"C:/Users/Tomas/Desktop/Ark_code/Ark_automation/ark/assets/wheels/gacha.png")
+gacha = Dinosaur("Gacha", f"C:/Users/wille/Documents/GitHub/Ark_automation/ark/assets/wheels/gacha.png")
 dedi = TekDedicatedStorage()
 
 def run_script_Square(letter_G: str):
@@ -46,14 +46,14 @@ def tek_pause():
 
 def open_crystals():
     player.look_down_hard()
-    player.inventory.open()
-    player.inventory.drop_all(items.OWL_PELLET)
-    player.inventory.drop_all(items.Y_TRAP)
-    player.inventory.close()
     player.turn_y_by(70)
     bed.lay_down()
     bed.get_up()
     player.walk("w", 3)
+    player.inventory.open()
+    player.inventory.drop_all(items.OWL_PELLET)
+    player.inventory.drop_all(items.YTRAP)
+    player.inventory.close()
     for _ in range(75):
         player.spam_hotbar()
     dump_dust()

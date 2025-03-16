@@ -467,7 +467,7 @@ class ArkWindow:
                         img.putpixel((x, y), (0, 255, 255))
         if grayscale:
             img = img.convert('L')
-        img.save("tes_test.png")
+#        img.save("tes_test.png")
         text = tes.image_to_string(img, config=ocr_config)
 
         return text

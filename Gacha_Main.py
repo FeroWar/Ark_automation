@@ -9,7 +9,7 @@ player = Player(500, 800, 100, 100)
 tp = Teleporter("Main Base")
 bed = Bed("")
 
-G = ["AA", "AB","AC", "AD"]
+G = ["AA", "AB","AC", "AD","AE", "AF","AG", "AH","AI", "AJ","AK", "AL"]
 i = 0
 
 time.sleep(1)
