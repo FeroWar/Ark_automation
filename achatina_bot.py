@@ -13,18 +13,23 @@ discord = DiscordWebhook("https://discord.com/api/webhooks/1290639488388698114/N
 
 def achatina_chamber():
     player.look_down_hard()
-    player.turn_y_by(115)
+    player.turn_y_by(100)
     time.sleep(1)
-    #achatina.inventory.open()
-    #achatina.inventory.transfer_all(items.PASTE)
-    #achatina.inventory.close()
+    try:
+        achatina.inventory.open()
+        achatina.inventory.transfer_all(items.PASTE)
+        achatina.inventory.close()
+    except Exception as e:
+        print(e)
     player.look_down_hard()
     player.crouch()
-    player.turn_y_by(70)
-    time.sleep(1)
-    #achatina.inventory.open()
-    #achatina.inventory.transfer_all(items.PASTE)
-    #achatina.inventory.close()
+    player.turn_y_by(50)
+    try:
+        achatina.inventory.open()
+        achatina.inventory.transfer_all(items.PASTE)
+        achatina.inventory.close()
+    except Exception as e:
+        print(e)
     player.crouch()
     player.look_down_hard()
 
@@ -52,7 +57,7 @@ def cicle():
     bed.lay_down()
     bed.get_up()
     time.sleep(0.3)
-    player.walk("d", 0.47)
+    player.walk("d", 0.5)
     for _ in range(10):
         time.sleep(1)
         player.walk("w", 0.2)
