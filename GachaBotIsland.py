@@ -147,6 +147,7 @@ def y_module():
     player.look_down_hard()
 
 def access_cropplots(on_tp: bool):
+    player.look_down_hard()
     angles = [30, 10, 15, 15, 15, 15, 15, 15, 15]
     if on_tp: angles = [35, 10, 15, 15, 15, 15, 15, 15, 10]
     for angle in angles:
