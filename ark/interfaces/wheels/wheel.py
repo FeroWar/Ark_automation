@@ -137,6 +137,7 @@ class ActionWheel(Ark):
 
     def is_open(self) -> bool:
         """Returns whether the action wheel is currently open"""
+        filename = self._filepath.split('\\')[-1].split(".")[0]
         return (
             self.window.locate_template(
                 self._filepath,
@@ -144,6 +145,7 @@ class ActionWheel(Ark):
                 confidence=0.7,
             )
             is not None
+            or filename.lower() in self.window.locate_all_text(self._WHEEL_NAME_AREA).lower()
         )
 
     def in_access_range(self) -> bool:

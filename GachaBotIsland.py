@@ -132,11 +132,12 @@ def y_module():
     player.turn_x_by(-180)
     player.look_down_hard()
     player.turn_y_by(70)
-    player.inventory.open()
-    player.inventory.drop_all(items.Y_TRAP)
     bed.lay_down()
     bed.get_up()
     player.walk("s", 0.3)
+    player.inventory.open()
+    player.inventory.drop_all(items.Y_TRAP)
+    player.inventory.close()
     player.walk("a", 0.6)
     access_cropplots(False)
     player.walk("a", 0.6)
@@ -146,6 +147,7 @@ def y_module():
     player.look_down_hard()
 
 def access_cropplots(on_tp: bool):
+    player.look_down_hard()
     angles = [30, 10, 15, 15, 15, 15, 15, 15, 15]
     if on_tp: angles = [35, 10, 15, 15, 15, 15, 15, 15, 10]
     for angle in angles:
