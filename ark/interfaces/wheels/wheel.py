@@ -28,6 +28,7 @@ class ActionWheel(Ark):
 
     _WHEEL_NAME_AREA = (840, 425, 240, 230)
     _WHEEL_AREA = (543, 135, 867, 825)
+    _BED_LAY_AREA = (1105, 405, 70, 70)
 
     def __init__(self, name: str, filepath: str) -> None:
         super().__init__()
@@ -137,7 +138,6 @@ class ActionWheel(Ark):
 
     def is_open(self) -> bool:
         """Returns whether the action wheel is currently open"""
-        filename = self._filepath.split('\\')[-1].split(".")[0]
         return (
             self.window.locate_template(
                 self._filepath,
@@ -145,7 +145,6 @@ class ActionWheel(Ark):
                 confidence=0.7,
             )
             is not None
-            or filename.lower() in self.window.locate_all_text(self._WHEEL_NAME_AREA).lower()
         )
 
     def in_access_range(self) -> bool:
