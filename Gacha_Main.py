@@ -25,7 +25,7 @@ while True:
         if tp.interface.is_open(): tp.interface.close()
         if bed.interface.is_open(): bed.interface.close()
         if player.inventory.is_open(): player.inventory.close()
-        player.walk("s", 0.5)
+        player.walk("d", 2)
         player.suicide()
         while not bed.interface.is_open():
             time.sleep(0.5)

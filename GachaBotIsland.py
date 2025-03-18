@@ -1,15 +1,16 @@
 import string
 import time
 
-from ark import Player, items, Dinosaur, Bed, TekCropPlot, TekDedicatedStorage
+from ark import Player, items, Dinosaur, Bed, TekCropPlot, TekDedicatedStorage, TekSleepingPod
 from ark.interfaces.structures.teleporter import Teleporter
 
 player = Player(500, 800, 100, 100)
 tp = Teleporter("Main Base")
 bed = Bed("")
 crop_plot = TekCropPlot("")
-gacha = Dinosaur("Gacha", f"C:/Users/Tomas/Desktop/Ark_code/Ark_automation/ark/assets/wheels/gacha.png")
+gacha = Dinosaur("Gacha", f"C:/Users/wille/Documents/GitHub/Ark_automation/ark/assets/wheels/gacha.png")
 dedi = TekDedicatedStorage()
+pod = TekSleepingPod("")
 
 def run_script_Square(letter_G: str):
     player.turn_y_by(-30)
@@ -32,12 +33,12 @@ def run_script_Square(letter_G: str):
     tek_pause()
 
 def tek_pause():
-    bed.lay_down()
+    pod.lay_down()
     #while (player.stats.health < player.stats.health_max):
     #player.get_hp()
     #check_logs()
     time.sleep(10)
-    bed.get_up()
+    pod.get_up()
     time.sleep(0.3)
     player.turn_y_by(-40)
     player.turn_x_by(-70)
@@ -60,6 +61,7 @@ def open_crystals():
     player.turn_x_by(40)
     dump_dust()
     player.turn_x_by(50)
+    time.sleep(0.5)
     drop_vaults()
     player.turn_x_by(90)
 
