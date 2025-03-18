@@ -18,8 +18,8 @@ class TekSleepingPod(Structure):
     """
 
     def __init__(self, name: str) -> None:
-        super().__init__(name, TekPodWheel())
-        self.action_wheel: TekPodWheel
+        super().__init__(name, "assets/wheels/pod.png")
+        #self.action_wheel: TekPodWheel
         self.interface = SpawnScreen()
         
     def spawn(self) -> None:
