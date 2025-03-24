@@ -74,6 +74,7 @@ class TeleportScreen(Ark):
             before = self.window.get_fullscreen()
             player.look_down_hard()
             self.open()
+            self.sleep(0.5)
             self.search(tp_name)
 
             self.teleport()
