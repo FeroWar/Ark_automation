@@ -22,9 +22,16 @@ while True:
     try:
         run_script_Square(G[i%len(G)])
     except:
-        if tp.interface.is_open(): tp.interface.close()
-        if bed.interface.is_open(): bed.interface.close()
-        if player.inventory.is_open(): player.inventory.close()
+        while tp.interface.is_open():
+            tp.interface.close()
+            time.sleep(1)
+        while bed.interface.is_open():
+            bed.interface.close()
+            time.sleep(1)
+        while player.inventory.is_open():
+            player.inventory.close()
+            time.sleep(1)
+            time.sleep(0.3)
         player.walk("d", 2)
         player.suicide()
         while not bed.interface.is_open():
