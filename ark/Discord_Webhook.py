@@ -50,3 +50,16 @@ class DiscordWebhook:
                 print("no ping")
                 self.LiveHook(log.message().replace("\n", " "), False)
 
+
+    def SendMsg(self, text, ping):
+        content = f"{text}, {ping}"
+        data = {
+            "content": content  # Message content to send
+        }
+        response = requests.post(self.webhook_url, json=data)
+
+        # Check the response status
+        if response.status_code == 204:
+            print("Message sent: " + content)
+        else:
+            print(f"Failed to send message to Discord: {response.text}")
