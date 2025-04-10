@@ -24,26 +24,22 @@ try:
     while True:
         try:
             run_script_Square(G[i%len(G)])
-        except:
-            discord.SendMsg("Gacha Bot Killed Itself", "<@333266368847675403>")
-            while tp.interface.is_open():
-                tp.interface.close()
-                time.sleep(1)
-            while bed.interface.is_open():
-                bed.interface.close()
-                time.sleep(1)
-            while player.inventory.is_open():
-                player.inventory.close()
-                time.sleep(1)
-                time.sleep(0.3)
-            player.walk("d", 2)
+        except Exception as e:
+            discord.SendMsg("Gacha Bot Killed Itself, Exception: " + str(e), "<@333266368847675403>")
+            player.walk("d", 1)
+            for _ in range(5):
+                if tp.interface.is_open(): tp.interface.close()
+                if bed.interface.is_open(): bed.interface.close()
+                if player.inventory.is_open(): player.inventory.close()
+                time.sleep(0.5)
+            player.walk("d", 1)
             player.suicide()
             while not bed.interface.is_open():
                 time.sleep(0.5)
             bed.spawn_in("SpawnA")
             time.sleep(12)
         i += 1
-except:
-    discord.SendMsg("Gacha Bot Full Shutdown","<@333266368847675403>")
+except Exception as e:
+    discord.SendMsg("Gacha Bot Full Shutdown, Exception: " + str(e),"<@333266368847675403>")
 
 
